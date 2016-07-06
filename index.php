@@ -172,9 +172,9 @@ if (isset ( $_SESSION ["uuid"] )) {
 		element : document.getElementById('container'),
 		projection : 'mercator',
 		fills : {
-			defaultFill : "#ABDDA4",
-			hasTraveledTo : "#AFAFAF",
-			bubbleColor : "#7F7FFF"
+			defaultFill : "#91AA9D",
+			hasTraveledTo : "#3E606F",
+			bubbleColor : "#FCFFF5"
 		},
 		data : {
 			<?=$data?>
@@ -303,5 +303,15 @@ if (isset ( $_SESSION ["uuid"] )) {
  });
  </script>
  <script type="text/javascript" src="js/validation.js"></script>
+ <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-80354381-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
 </body>
 </html>

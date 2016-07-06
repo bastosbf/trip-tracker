@@ -193,7 +193,16 @@ if (isset ( $_SESSION ["uuid"] )) {
 		},
 		
 	 });
-	map.arc([<?=$arcs?>]);
+    var arcs =[<?=$arcs?>];
+	function addArcs(index) {
+        map.arc( arcs.slice(0, index) , {strokeWidth: 2});
+        if ( index < arcs.length ) {
+            window.setTimeout(function() {
+                addArcs(++index)
+            }, 750);
+        }
+    }
+    addArcs(1);	 
  </script>
  <script type="text/javascript">
  $("#logout-menu").on("click", function() {

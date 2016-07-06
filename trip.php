@@ -8,7 +8,13 @@
   <select id="trip_state" name="trip_state" class="form-control" disabled="disabled"></select>
  </div>
  <div id="trip-alert" class="alert alert-info" style="display: none">
-  Please, input the latitude and longitude of the selected state. It can be obtained in:
+  <strong>Hello!</strong>
+  <br/>
+  That is the first time someone select this state!
+  <br/>
+  Please, help others inputting the latitude and longitude of the selected state, for a more accuracy information!
+  <br />  
+  It can be obtained at:
   <a href="http://www.latlong.net/" target="_blank">http://www.latlong.net/</a>
  </div>
  <div id="latitude-form-group" class="form-group" style="display: none">

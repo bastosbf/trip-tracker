@@ -34,11 +34,11 @@
    </span>
   </div>
  </div>
- <div class="form-group">
+ <!--<div class="form-group">
   <label for="trip_photo">Photo</label>
   <input id="trip_photo" name="trip_photo" type="file" class="file file-loading" placeholder="Photo" data-allowed-file-extensions='["jpg", "png"]'>
  </div>
- <br />
+ -->
  <div align="right">
   <input type="submit" class="btn btn-primary" value="Add" />
  </div>

@@ -16,7 +16,7 @@ if ($latitude != null && $longitude  != null) {
 	$stmt->close();
 }
 
-if(!file_exists("../photos/$uuid")) {
+/*if(!file_exists("../photos/$uuid")) {
 	mkdir("../photos/$uuid");
 }
 
@@ -25,9 +25,10 @@ $filename = $_FILES ["trip_photo"] ["name"];
 $target = "../photos/$uuid/$filename";
 move_uploaded_file ( $source, $target );
 
-$sql = "INSERT INTO trip (user_id, state_id, date, photo) VALUE (?, ?, ? ,?)";
+$sql = "INSERT INTO trip (user_id, state_id, date, photo) VALUE (?, ?, ? ,?)";*/
+$sql = "INSERT INTO trip (user_id, state_id, date) VALUE (?, ?, ?)";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ssss", $uuid, $state, $date, $filename);
+$stmt->bind_param("sss", $uuid, $state, $date);
 if ($stmt->execute() === TRUE) {
 	http_response_code ( 200 );
 } else {

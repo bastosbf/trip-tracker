@@ -7,29 +7,27 @@ $arcs = "";
 
 if (isset ( $_SESSION ["uuid"] )) {
 	$uuid = $_SESSION ["uuid"];
-	$sql = "SELECT country.code, state.name, state.latitude, state.longitude, trip.date, trip.photo FROM trip INNER JOIN state ON trip.state_id = state.id INNER JOIN country ON state.country_id = country.id WHERE user_id = '$uuid' ORDER BY trip.date ASC";
-	$result = $conn->query ( $sql );
+	$sql = "SELECT country.code, state.name, state.latitude, state.longitude, trip.date FROM trip INNER JOIN state ON trip.state_id = state.id INNER JOIN country ON state.country_id = country.id WHERE user_id = ? ORDER BY trip.date ASC";
+	$stmt = $conn->prepare($sql);
+	$stmt->bind_param("s", $uuid);
+	$stmt->execute();
+	$stmt->store_result ();
+	$num_of_rows = $stmt->num_rows;
+	$stmt->bind_result ( $county_code, $state_name, $state_latitude, $state_longitude, $trip_date );	
 	
-	if ($result->num_rows > 0) {
+	if ($num_of_rows > 0) {
 		$first_arcs_flag = true;
 		$last_arcs_flag = false;
 		$arcs_counter = 0;
-		while ( $row = $result->fetch_assoc () ) {
+		while ( $stmt->fetch () ) {
 			$arcs_counter ++;
-			$county_code = $row ["code"];
-			$state_name = $row ["name"];
-			$state_latitude = $row ["latitude"];
-			$state_longitude = $row ["longitude"];
-			$trip_date = $row ["date"];
-			$trip_photo = $row ["photo"];
-			
 			if ($state_latitude != 0 && $state_longitude != 0) {
 				$coordinates = "latitude : $state_latitude, longitude : $state_longitude";
 			}
 			$data .= "$county_code : { fillKey : 'hasTraveledTo' },";
-			$bombs .= "{ name : '$state_name', radius : 5, country : '$county_code', date : '$trip_date', img : 'photos/$uuid/$trip_photo', $coordinates},";
-			if ($result->num_rows > 1) {
-				$last_arcs_flag = $result->num_rows == $arcs_counter;
+			$bombs .= "{ state : '$state_name', radius : 5, country : '$county_code', date : '$trip_date', $coordinates},";
+			if ($num_of_rows > 1) {
+				$last_arcs_flag = $num_of_rows == $arcs_counter;
 				if ($first_arcs_flag) {
 					$arcs .= "{ origin : { $coordinates },";
 					$first_arcs_flag = false;
@@ -67,7 +65,7 @@ if (isset ( $_SESSION ["uuid"] )) {
    <div class="container-fluid">
     <div class="navbar-header">
      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-      <span class="sr-only">Toggle navigation</span>
+      <span class="sr-only"></span>
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
@@ -106,6 +104,9 @@ if (isset ( $_SESSION ["uuid"] )) {
     </div>
    </div>
   </nav>
+  <h2 class="featurette-heading" align="center">
+   <span class="text-muted">Check the Chronological Order of your Trips and the Countries you Visited</span>
+  </h2>
   <div id="container" style="position: relative; margin: 0 auto; width: 750px; height: 500px;"></div>
  </div>
  <div id="about-modal" class="modal fade">
@@ -174,7 +175,7 @@ if (isset ( $_SESSION ["uuid"] )) {
 		fills : {
 			defaultFill : "#91AA9D",
 			hasTraveledTo : "#3E606F",
-			bubbleColor : "#FCFFF5"
+			bubbleColor : "#EB7F00"
 		},
 		data : {
 			<?=$data?>
@@ -185,10 +186,9 @@ if (isset ( $_SESSION ["uuid"] )) {
 	  fillKey : 'bubbleColor',
 	  popupTemplate : function(geo, data) {
 		  return [
-					'<div class="hoverinfo" align="center">' + data.name,
-					'<br/>Country: ' + data.country,
-					'<br/>Date: ' + data.date,
-					'<br/><div align="center"><img src="'+ data.img +'" widht="100px" height="100px"/></div>',
+					'<div class="hoverinfo" align="center">' + data.country,
+					'<br/>' + data.state,
+					'<br/>' + data.date,
 					'</div>' ].join('');
 		},
 		
@@ -202,7 +202,9 @@ if (isset ( $_SESSION ["uuid"] )) {
             }, 750);
         }
     }
-    addArcs(1);	 
+	window.setTimeout(function() {
+		addArcs(1)
+    }, 750);    	 
  </script>
  <script type="text/javascript">
  $("#logout-menu").on("click", function() {
